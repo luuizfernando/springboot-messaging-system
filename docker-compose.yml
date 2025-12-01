@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: notification-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - notification-net
+
+  mongodb:
+    image: mongo:6.0
+    container_name: notification-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secretpassword
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - notification-net
+
+  mongo-express:
+    image: mongo-express
+    container_name: notification-mongo-express
+    restart: always
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: secretpassword
+      ME_CONFIG_MONGODB_URL: mongodb://root:secretpassword@mongodb:27017/
+    depends_on:
+      - mongodb
+    networks:
+      - notification-net
+
+  postgres:
+    image: postgres
+    container_name: notification-postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: userdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - notification-net
+
+volumes:
+  mongodb_data:
+  postgres_data:
+
+networks:
+  notification-net:
+    driver: bridge
