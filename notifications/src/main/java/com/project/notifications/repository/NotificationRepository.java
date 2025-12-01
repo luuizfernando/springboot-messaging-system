@@ -9,7 +9,7 @@ import com.project.notifications.domain.Notification;
 
 
 @Repository
-public interface NotificationRepository extends MongoRepository<Notification, Long> {
+public interface NotificationRepository extends MongoRepository<Notification, String> {
 
     public List<Notification> findByUserId(Long userId);
     

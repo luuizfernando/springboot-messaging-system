@@ -57,6 +57,44 @@ services:
     networks:
       - notification-net
 
+  user-app:
+    build: ./user
+    image: user-app
+    container_name: user-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: user
+      SPRING_RABBITMQ_PASSWORD: password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+      - postgres
+    networks:
+      - notification-net
+
+  notifications-app:
+    build: ./notifications
+    image: notifications-app
+    container_name: notifications-app
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://root:secretpassword@mongodb:27017/notifications?authSource=admin
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: user
+      SPRING_RABBITMQ_PASSWORD: password
+    ports:
+      - "8081:8081"
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - notification-net
+
 volumes:
   mongodb_data:
   postgres_data:
