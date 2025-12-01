@@ -1,7 +1,6 @@
 package com.project.notifications.domain;
 
-import java.util.UUID;
-
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
@@ -10,7 +9,9 @@ import lombok.Data;
 @Data
 public class Notification {
 
-    private UUID uuid;
+    @Id
+    private String id;
+    private Long userId;
     private String text;
 
 }

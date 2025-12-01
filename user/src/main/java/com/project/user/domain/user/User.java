@@ -1,5 +1,8 @@
 package com.project.user.domain.user;
 
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,5 +21,8 @@ public class User {
     private String name;
     private String email;
     private String password;
+    
+    @Column(name = "message")
+    List<String> messages;
 
 }
